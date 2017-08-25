@@ -17,6 +17,10 @@ export class RangedMoment {
   private _alignment: Alignment;
   private _backingMoment: moment.Moment;
 
+  public get utcSeconds(): number {
+    return Math.floor(this._backingMoment.toDate().getTime() / 1000);
+  }
+
   public get invalid(): boolean {
     return this.precision == null || !this._backingMoment.isValid();
   }
