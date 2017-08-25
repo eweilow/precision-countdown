@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "install": "node_modules/.bin/tsc ./src/index.ts --noImplicitReturns --noFallthroughCasesInSwitch --removeComments --target esnext --outDir ./dist --module commonjs --moduleResolution Node --sourceMap",
+    "install": "node_modules/.bin/tsc ./src/index.ts --declaration --noImplicitReturns --noFallthroughCasesInSwitch --removeComments --target esnext --outDir ./dist --module commonjs --moduleResolution Node --sourceMap",
     "build": "npm run clean && npm run _build",
     "_build": "node_modules/.bin/tsc ./src/index.ts ./src/test/index.ts --noImplicitReturns --noFallthroughCasesInSwitch --removeComments --target esnext --outDir ./dist --module commonjs --moduleResolution Node --sourceMap",
     "clean": "node_modules/.bin/del-cli dist/*",
