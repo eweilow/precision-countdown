@@ -10,7 +10,7 @@ export enum PrecisionType {
 };
 
 export class Precision {
-  static parse(dateMode: DateMode, alignment: Alignment, date: boolean, month: Month, quarter: number, year: number, decade: number) {
+  static parse(dateMode: DateMode, alignment: Alignment, date: number, month: Month, quarter: number, year: number, decade: number) {
     if(date != null) {
       return new Precision(PrecisionType.Day, 1);
     } else if(month != null) {

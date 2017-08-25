@@ -40,6 +40,10 @@ describe("index.ts", function() {
     test("February 29 2016", null, 2016, Month.February, null, 29, false);
     test("Jan 29 2016", null, 2016, Month.January, null, 29, false);
 
+    test("2016 Jan 29", null, 2016, Month.January, null, 29, false);
+
+    test("2017 Aug 02", null, 2017, Month.August, null, 2, false);
+
     test("February 2016", null, 2016, Month.February, null, null, false);
 
     test("Q1 2013", null, 2013, null, 1, null, false);
@@ -128,6 +132,7 @@ describe("index.ts", function() {
       [ "2000s", "about a decade ago" ],
       [ "1990s", "2 decades ago" ],
 
+      [ "2012", "5 years ago" ],
       [ "2013", "4 years ago" ],
       [ "2014", "3 years ago" ],
       [ "2015", "2 years ago" ],
@@ -137,6 +142,7 @@ describe("index.ts", function() {
       [ "2019", "in 2 years" ],
       [ "2020", "in 3 years" ],
       [ "2021", "in 4 years" ],
+      [ "2022", "in 5 years" ],
 
       [ "Q1 2013", "4 years ago" ],
       [ "Q2 2013", "4 years ago" ],
@@ -156,7 +162,7 @@ describe("index.ts", function() {
       [ "Q1 2016", "about a year and a half ago" ],
       [ "Q2 2016", "about a year ago" ],
       [ "Q3 2016", "about a year ago" ],
-      [ "Q4 2016", "about half a year ago" ],
+      [ "Q4 2016", "6-9 months ago" ],
 
       [ "Q1 2017", "3-6 months ago" ],
       [ "Q2 2017", "in the last 3 months" ],
@@ -181,13 +187,70 @@ describe("index.ts", function() {
       [ "Q1 2021", "in 3 years" ],
       [ "Q2 2021", "in 3 years" ],
       [ "Q3 2021", "in 4 years" ],
-      [ "Q4 2021", "in 4 years" ]
+      [ "Q4 2021", "in 4 years" ],
+
+      [ relativeTo.clone().subtract(1, "month").format("YYYY MMM"), "last month" ],
+      [ relativeTo.clone().subtract(2, "month").format("YYYY MMM"), "2 months ago" ],
+      [ relativeTo.clone().subtract(12, "month").format("YYYY MMM"), "12 months ago" ],
+      [ relativeTo.clone().subtract(13, "month").format("YYYY MMM"), "1 year, 1 month ago" ],
+      [ relativeTo.clone().subtract(14, "month").format("YYYY MMM"), "1 year, 2 months ago" ],
+      [ relativeTo.clone().subtract(24, "month").format("YYYY MMM"), "1 year, 12 months ago" ],
+      [ relativeTo.clone().subtract(25, "month").format("YYYY MMM"), "2 years, 1 month ago" ],
+      [ relativeTo.clone().subtract(26, "month").format("YYYY MMM"), "2 years, 2 months ago" ],
+      [ relativeTo.clone().subtract(36, "month").format("YYYY MMM"), "2 years, 12 months ago" ],
+      [ relativeTo.clone().subtract(37, "month").format("YYYY MMM"), "3 years, 1 month ago" ],
+      [ relativeTo.clone().subtract(38, "month").format("YYYY MMM"), "3 years, 2 months ago" ],
+      [ relativeTo.clone().subtract(48, "month").format("YYYY MMM"), "3 years, 12 months ago" ],
+      [ relativeTo.clone().subtract(49, "month").format("YYYY MMM"), "4 years ago" ],
+      [ relativeTo.clone().subtract(50, "month").format("YYYY MMM"), "4 years ago" ],
+
+      [ relativeTo.clone().add(0, "month").format("YYYY MMM"), "this month" ],
+
+      [ relativeTo.clone().add(1, "month").format("YYYY MMM"), "next month" ],
+      [ relativeTo.clone().add(2, "month").format("YYYY MMM"), "in 2 months" ],
+      [ relativeTo.clone().add(12, "month").format("YYYY MMM"), "in 12 months" ],
+      [ relativeTo.clone().add(13, "month").format("YYYY MMM"), "in 1 year, 1 month" ],
+      [ relativeTo.clone().add(14, "month").format("YYYY MMM"), "in 1 year, 2 months" ],
+      [ relativeTo.clone().add(24, "month").format("YYYY MMM"), "in 1 year, 12 months" ],
+      [ relativeTo.clone().add(25, "month").format("YYYY MMM"), "in 2 years, 1 month" ],
+      [ relativeTo.clone().add(26, "month").format("YYYY MMM"), "in 2 years, 2 months" ],
+      [ relativeTo.clone().add(36, "month").format("YYYY MMM"), "in 2 years, 12 months" ],
+      [ relativeTo.clone().add(37, "month").format("YYYY MMM"), "in 3 years, 1 month" ],
+      [ relativeTo.clone().add(38, "month").format("YYYY MMM"), "in 3 years, 2 months" ],
+      [ relativeTo.clone().add(48, "month").format("YYYY MMM"), "in 3 years, 12 months" ],
+      [ relativeTo.clone().add(49, "month").format("YYYY MMM"), "in 4 years" ],
+      [ relativeTo.clone().add(50, "month").format("YYYY MMM"), "in 4 years" ],
+
+      [ relativeTo.clone().subtract(1, "day").format("YYYY MMM DD"), "yesterday" ],
+      [ relativeTo.clone().subtract(2, "day").format("YYYY MMM DD"), "2 days ago" ],
+      [ relativeTo.clone().subtract(7, "day").format("YYYY MMM DD"), "7 days ago" ],
+      [ relativeTo.clone().subtract(14, "day").format("YYYY MMM DD"), "14 days ago" ],
+      [ relativeTo.clone().subtract(7*2 + 1, "day").format("YYYY MMM DD"), "2 weeks, 1 day ago" ],
+      [ relativeTo.clone().subtract(7*2 + 7, "day").format("YYYY MMM DD"), "2 weeks, 7 days ago" ],
+      [ relativeTo.clone().subtract(7*3 + 1, "day").format("YYYY MMM DD"), "3 weeks, 1 day ago" ],
+      [ relativeTo.clone().subtract(7*3 + 7, "day").format("YYYY MMM DD"), "3 weeks, 7 days ago" ],
+      [ relativeTo.clone().subtract(7*48 + 6, "day").format("YYYY MMM DD"), "48 weeks, 6 days ago" ],
+      [ relativeTo.clone().subtract(7*48 + 7, "day").format("YYYY MMM DD"), "12 months ago" ],
+      [ relativeTo.clone().subtract(7*51 + 7, "day").format("YYYY MMM DD"), "1 year, 1 month ago" ],
+
+      [ relativeTo.clone().add(0, "day").format("YYYY MMM DD"), "today" ],
+      [ relativeTo.clone().add(1, "day").format("YYYY MMM DD"), "tomorrow" ],
+      [ relativeTo.clone().add(2, "day").format("YYYY MMM DD"), "in 2 days" ],
+      [ relativeTo.clone().add(7, "day").format("YYYY MMM DD"), "in 7 days" ],
+      [ relativeTo.clone().add(14, "day").format("YYYY MMM DD"), "in 14 days" ],
+      [ relativeTo.clone().add(7*2 + 1, "day").format("YYYY MMM DD"), "in 2 weeks, 1 day" ],
+      [ relativeTo.clone().add(7*2 + 7, "day").format("YYYY MMM DD"), "in 2 weeks, 7 days" ],
+      [ relativeTo.clone().add(7*3 + 1, "day").format("YYYY MMM DD"), "in 3 weeks, 1 day" ],
+      [ relativeTo.clone().add(7*3 + 7, "day").format("YYYY MMM DD"), "in 3 weeks, 7 days" ],
+      [ relativeTo.clone().add(7*48 + 6, "day").format("YYYY MMM DD"), "in 48 weeks, 6 days" ],
+      [ relativeTo.clone().add(7*48 + 7, "day").format("YYYY MMM DD"), "in 12 months" ],
+      [ relativeTo.clone().add(7*51 + 7, "day").format("YYYY MMM DD"), "in 1 year, 1 month" ]
     ];
 
     describe(`should return correctly relative to ${relativeTo.format("YYYY-MM-DD HH:mm:ss")}`, function() {
       for(let [ inStr, outStr ] of inOut) {
         it(`'${inStr}' = '${outStr}'`, function() {
-          assert.equal(parse(inStr).differenceTo(relativeTo), outStr, "strings should match");
+          assert.equal(parse(inStr).differenceTo(relativeTo), outStr, "strings should match: " + parse(inStr).precisionType);
         });
       }
     });

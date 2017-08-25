@@ -1,4 +1,4 @@
-import { formatWeekPrecision } from "./week";
+import { formatMonthPrecision } from "./month";
 import { getDefaultPrefix } from "./prefix";
 
 export function formatDayPrecision(dayDifference: number, prefixForPast: string, prefixForFuture: string): string {
@@ -9,10 +9,10 @@ export function formatDayPrecision(dayDifference: number, prefixForPast: string,
   const weeks = Math.floor(absoluteDifference / 7);
   const daysInWeek = absoluteDifference - weeks * 7;
 
-  if(absoluteDifference > 360) {
-    return formatWeekPrecision(weeks, prefixForPast, prefixForFuture);
+  if(weeks >= 49) {
+    return formatMonthPrecision(sign * Math.floor(weeks / 4), prefixForPast, prefixForFuture);
   }
-
+  
   if(absoluteDifference === 0) return `${prefixForFuture || ""} today`.trim();
   if(inThePast) {
     if(absoluteDifference > 14) {
@@ -21,8 +21,8 @@ export function formatDayPrecision(dayDifference: number, prefixForPast: string,
         return `1 week, 1 day ago`;
       }
       if(daysInWeek === 0) {
-        if(weeks - 1 === 1) return `1 week, 4 days ago`;
-        return `${weeks - 1} weeks, 4 days ago`;
+        if(weeks - 1 === 1) return `1 week, 7 days ago`;
+        return `${weeks - 1} weeks, 7 days ago`;
       }
       if(daysInWeek === 1) return `${weeks} weeks, 1 day ago`;
       return `${weeks} weeks, ${daysInWeek} days ago`;
@@ -37,8 +37,8 @@ export function formatDayPrecision(dayDifference: number, prefixForPast: string,
         return `${defaultPrefix}1 week, ${daysInWeek} days`;
       }
       if(daysInWeek === 0) {
-        if(weeks - 1 === 1) return `${defaultPrefix}1 week, 4 days`;
-        return `${defaultPrefix}${weeks - 1} weeks, 4 days`;
+        if(weeks - 1 === 1) return `${defaultPrefix}1 week, 7 days`;
+        return `${defaultPrefix}${weeks - 1} weeks, 7 days`;
       }
       if(daysInWeek === 1) return `${defaultPrefix}${weeks} weeks, 1 day`;
       return `${defaultPrefix}${weeks} weeks, ${daysInWeek} days`;

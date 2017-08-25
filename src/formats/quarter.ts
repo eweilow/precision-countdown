@@ -38,7 +38,7 @@ export function asMonths(inThePast, absoluteDifference: number, defaultPrefix: s
   }
   if(inThePast) {
     if(months > 9) return "about a year ago";
-    if(months > 6) return "about half a year ago";
+    if(months > 6) return "6-9 months ago";
     if(months > 3) return "3-6 months ago";
     return defaultPrefix + "the last 3 months";
   } else {

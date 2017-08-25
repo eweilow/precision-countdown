@@ -95,43 +95,49 @@ export class RangedMoment {
     this._backingMoment = backingMoment !== null ? backingMoment.clone() : moment();
   }
 
+  static floorToZero(val) {
+    const sign = Math.sign(val);
+
+    return Math.floor(val); //Math.floor(Math.abs(val)) * sign;
+  }
+
   differenceTo(otherMoment: moment.Moment): string {
     if(this.invalid) return "Invalid";
 
-    const otherRangedMoment = new RangedMoment(null, this._precision, null, otherMoment);
 
     const prefix = null;
     const postfix = null;
 
     if(this.precisionType === PrecisionType.Decade) {
+      const otherRangedMoment = new RangedMoment(null, this._precision, null, otherMoment);
       const difference = this.decade - otherRangedMoment.decade;
 
-      return formatDecadePrecision(Math.floor(difference), prefix, postfix);
+      return formatDecadePrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.precisionType === PrecisionType.Year) {
-      const difference = this._backingMoment.diff(otherRangedMoment._backingMoment, "year", true);
+      const difference = this._backingMoment.diff(otherMoment, "year", true);
 
-      return formatYearPrecision(Math.floor(difference), prefix, postfix);
+      return formatYearPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.precisionType === PrecisionType.Quarter) {
-      const difference = this._backingMoment.diff(otherRangedMoment._backingMoment, "quarter", true);
+      const difference = this._backingMoment.diff(otherMoment, "quarter", true);
 
-      return formatQuarterPrecision(Math.floor(difference), prefix, postfix);
+      return formatQuarterPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.precisionType === PrecisionType.Month) {
-      const difference = this._backingMoment.diff(otherRangedMoment._backingMoment, "month", true);
+      const difference = this._backingMoment.diff(otherMoment, "month", true);
 
-      return formatMonthPrecision(Math.floor(difference), prefix, postfix);
+      return formatMonthPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.precisionType === PrecisionType.Week) {
-      const difference = this._backingMoment.diff(otherRangedMoment._backingMoment, "week", true);
+      const difference = this._backingMoment.diff(otherMoment, "week", true);
 
-      return formatWeekPrecision(Math.floor(difference), prefix, postfix);
+      return formatWeekPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.precisionType === PrecisionType.Day) {
-      const difference = this._backingMoment.diff(otherRangedMoment._backingMoment, "day", true);
+      const difference = this._backingMoment.diff(otherMoment, "hours", true) / 24 + 0.5;
 
-      return formatDayPrecision(Math.floor(difference), prefix, postfix);
+      return formatDayPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
 
     return null;

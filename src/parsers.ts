@@ -35,7 +35,6 @@ export function parseAlignment(token: string): Alignment {
 
 export function parseDate(token: string): number {
   const parsed = parseInt(token, 10);
-  if(token !== parsed.toString()) return null;
   if(parsed > 0 && parsed <= 31) return parsed;
   return null;
 }

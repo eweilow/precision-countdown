@@ -10,15 +10,15 @@ export function formatMonthPrecision(monthDifference: number, prefixForPast: str
   const monthsInYear = absoluteDifference - years * 12;
 
   if(absoluteDifference > 48) {
-    return formatYearPrecision(years, prefixForPast, prefixForFuture);
+    return formatYearPrecision(sign * years, prefixForPast, prefixForFuture);
   }
 
   if(absoluteDifference === 0) return `${prefixForFuture || ""} this month`.trim();
   if(inThePast) {
     if(absoluteDifference > 12) {
       if(years === 1) {
-        if(monthsInYear === 1) return `1 year, ${monthsInYear} months ago`;
-        return `1 year, 1 month ago`;
+        if(monthsInYear === 1) return `1 year, 1 month ago`; 
+        return `1 year, ${monthsInYear} months ago`;
       }
       if(monthsInYear === 0) {
         if(years - 1 === 1) return `1 year, 12 months ago`;
