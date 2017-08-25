@@ -8,8 +8,9 @@ import { Precision, PrecisionType } from "./Precision";
 import { RangedMoment } from "./RangedMoment";
 
 function tokenize(input: string, order: TokenType[] = []): Token[] {
-  return input.split(" ")
-    .filter(element => element.trim().length > 0)
+  return input.split(/[\s,]/g)
+    .map(element => element.trim())
+    .filter(element => element.length > 0)
     .map(element => new Token(element, input))
     .sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type));
 }

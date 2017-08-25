@@ -45,6 +45,11 @@ describe("index.ts", function() {
 
     test("2016 Jan 29", null, 2016, Month.January, null, 29, false);
 
+    test("2016 Jan 26th", null, 2016, Month.January, null, 26, false);
+    test("2016 Jan 1st", null, 2016, Month.January, null, 1, false);
+
+    test("September 30th, 6:30am PDT 2017", null, 2017, Month.September, null, 30, false);
+
     test("2017 Aug 02", null, 2017, Month.August, null, 2, false);
 
     test("February 2016", null, 2016, Month.February, null, null, false);

@@ -34,14 +34,17 @@ export function parseAlignment(token: string): Alignment {
 }
 
 export function parseDate(token: string): number {
+  if(!/^\s*[0-9]?[0-9][A-Z]?[A-Z]?\s*$/i.test(token)) return null;
+
   const parsed = parseInt(token, 10);
   if(parsed > 0 && parsed <= 31) return parsed;
   return null;
 }
 
 export function parseYear(token: string): number {
+  if(!/^\s*[0-9]{4}\s*$/i.test(token)) return null;
+
   const parsed = parseInt(token, 10);
-  if(token !== parsed.toString()) return null;
   return parsed;
 }
 
