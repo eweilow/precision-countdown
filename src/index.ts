@@ -25,6 +25,16 @@ const Order = [
 ];
 
 function parse(input: string, createdAtString: string = null): RangedMoment {
+
+  let match = /^\s*([0-9]{4})[/-]([0-9]{2})[/-]([0-9]{2})\s*$/.exec(input);
+  if(match != null) {
+    let [ _match, _year, _month, _date ] = match;
+    
+    let date = moment({ year: parseInt(_year, 10), month: parseInt(_month, 10) - 1, date: parseInt(_date, 10) });
+
+    input = [date.year(), date.format("MMM"), date.date()].map(String).join(" ");
+  }
+
   const createdAt = createdAtString !== null ? moment(createdAtString) : moment();
   const tokens = tokenize(input, Order);
   const args = new Array(Order.length);

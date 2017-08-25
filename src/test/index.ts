@@ -34,6 +34,9 @@ describe("index.ts", function() {
   }
 
   describe("valid parsing", function() {
+    test("2017-02-03", null, 2017, Month.February, null, 3, false);
+    test("2017/02/03", null, 2017, Month.February, null, 3, false);
+
     test("January 1 2017", null, 2017, Month.January, null, 1, false);
     test("February 2 2017", null, 2017, Month.February, null, 2, false);
     test("February 28 2017", null, 2017, Month.February, null, 28, false);
