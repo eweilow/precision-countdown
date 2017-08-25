@@ -48,7 +48,7 @@ function parse(input: string, createdAtString: string = null): RangedMoment {
 }
 
 function parseTokens(input: string, createdAt: moment.Moment, precision: Precision, dateMode: DateMode, alignment: Alignment, date: number, month: Month, quarter: number, year: number, decade: number): RangedMoment {
-  let moment: RangedMoment = new RangedMoment(input, precision, dateMode, createdAt);
+  let moment: RangedMoment = new RangedMoment(input, precision, dateMode, alignment, createdAt);
   
   if(decade) {
     moment.decade = decade;

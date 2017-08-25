@@ -14,6 +14,7 @@ export class RangedMoment {
   private _input: string;
   private _precision: Precision;
   private _dateMode: DateMode;
+  private _alignment: Alignment;
   private _backingMoment: moment.Moment;
 
   public get invalid(): boolean {
@@ -32,12 +33,20 @@ export class RangedMoment {
     return this._precision;
   }
 
+  public get alignment(): Alignment {
+    return this._alignment;
+  }
+
   public get precisionType(): PrecisionType {
     return this._precision.type;
   }
 
+  public get countdownPrecisionType(): PrecisionType {
+    return this._precision.countdownType;
+  }
+
   public get precisionSpan(): number {
-    return this._precision.span;
+    return typeof this._precision.span === "boolean" ? 0 : this._precision.span;
   }  
   
   public get date(): number {
@@ -88,10 +97,11 @@ export class RangedMoment {
     this._backingMoment.year(Math.floor(decade / 10) * 10);
   }
 
-  constructor(input: string, precision: Precision, dateMode: DateMode, backingMoment: moment.Moment = null) {
+  constructor(input: string, precision: Precision, dateMode: DateMode, alignment: Alignment, backingMoment: moment.Moment = null) {
     this._input = input;
     this._precision = precision;
     this._dateMode = dateMode;
+    this._alignment = alignment;
     this._backingMoment = backingMoment !== null ? backingMoment.clone() : moment();
   }
 
@@ -104,51 +114,59 @@ export class RangedMoment {
   differenceTo(otherMoment: moment.Moment): string {
     if(this.invalid) return "Invalid";
 
-
     const prefix = null;
     const postfix = null;
 
-    if(this.precisionType === PrecisionType.Decade) {
-      const otherRangedMoment = new RangedMoment(null, this._precision, null, otherMoment);
+    if(this.countdownPrecisionType === PrecisionType.Decade) {
+      const otherRangedMoment = new RangedMoment(null, this._precision, null, null, otherMoment);
       const difference = this.decade - otherRangedMoment.decade;
 
-      return formatDecadePrecision(RangedMoment.floorToZero(difference), prefix, postfix);
+      return formatDecadePrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
     }
-    if(this.precisionType === PrecisionType.Year) {
+    if(this.countdownPrecisionType === PrecisionType.Year) {
       const difference = this._backingMoment.diff(otherMoment, "year", true);
 
-      return formatYearPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
+      return formatYearPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
     }
-    if(this.precisionType === PrecisionType.Quarter) {
+    if(this.countdownPrecisionType === PrecisionType.Quarter) {
       const difference = this._backingMoment.diff(otherMoment, "quarter", true);
 
-      return formatQuarterPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
+      return formatQuarterPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
     }
-    if(this.precisionType === PrecisionType.Month) {
+    if(this.countdownPrecisionType === PrecisionType.Month) {
       const difference = this._backingMoment.diff(otherMoment, "month", true);
 
-      return formatMonthPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
+      return formatMonthPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
     }
-    if(this.precisionType === PrecisionType.Week) {
+    if(this.countdownPrecisionType === PrecisionType.Week) {
       const difference = this._backingMoment.diff(otherMoment, "week", true);
 
-      return formatWeekPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
+      return formatWeekPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
     }
-    if(this.precisionType === PrecisionType.Day) {
+    if(this.countdownPrecisionType === PrecisionType.Day) {
       const difference = this._backingMoment.diff(otherMoment, "hours", true) / 24 + 0.5;
 
-      return formatDayPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
+      return formatDayPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
     }
 
     return null;
   }
 
   private prefix(): string {
-    return this.dateMode === DateMode.NET 
-      ? "NET"
-      : (this.dateMode === DateMode.NLT
-          ? "NLT"
-          : "" );
+    switch(this.dateMode) {
+      case DateMode.NET: return "NET";
+      case DateMode.NLT: return "NLT";
+      default: return "";
+    }
+  }
+
+  private alignmentPrefix(): string {
+    switch(this.alignment) {
+      case Alignment.Early: return "Early";
+      case Alignment.Mid: return "Mid";
+      case Alignment.Late: return "Late";
+      default: return "";
+    }
   }
 
   private _format(): string {
@@ -173,7 +191,7 @@ export class RangedMoment {
   format(): string {
     if(this.invalid) return "Invalid";
 
-    return `${this.prefix()} ${this._format()}`.trim();
+    return [this.prefix(), this.alignmentPrefix(), this._format()].filter(el => el.length > 0).join(" ");
   }
 
   private _humanized(): string {
@@ -198,7 +216,7 @@ export class RangedMoment {
   humanized(): string {
     if(this.invalid) return "Invalid";
 
-    return `${this.prefix()} ${this._humanized()}`.trim();
+    return [this.prefix(), this.alignmentPrefix(), this._humanized()].filter(el => el.length > 0).join(" ");
   }
 
   toString() {

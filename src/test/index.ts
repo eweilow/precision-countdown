@@ -1,6 +1,6 @@
-import "source-map-support/register";
+import("source-map-support/register");
+import("mocha");
 
-import "mocha";
 import { assert } from "chai";
 
 import parse from "../";
@@ -66,8 +66,9 @@ describe("index.ts", function() {
       [ "NLT January 3 2017", "NLT January 3rd, 2017" ],
       [ "January 7 2017", "January 7th, 2017" ],
 
-      [ "Early January 2018", "January 2018" ],
+      [ "Early January 2018", "Early January 2018" ],
       [ "NET January 2018", "NET January 2018" ],
+      [ "NET Late January 2018", "NET Late January 2018" ],
       [ "Apr 2019", "April 2019" ],
 
       [ "NET Q1", "NET Q1 " + new Date().getUTCFullYear()],
@@ -99,7 +100,8 @@ describe("index.ts", function() {
       [ "NLT January 3 2017", "NLT 2017-01-03" ],
       [ "January 7 2017", "2017-01-07" ],
 
-      [ "Early January 2018", "2018-01" ],
+      [ "Early January 2018", "Early 2018-01" ],
+      [ "NET Mid January 2018", "NET Mid 2018-01" ],
       [ "NET January 2018", "NET 2018-01" ],
       [ "Apr 2019", "2019-04" ],
 
@@ -257,5 +259,25 @@ describe("index.ts", function() {
         });
       }
     });
-  })
+  });
+
+  describe("countdown with alignment", function() {
+    const relativeTo = moment("2017-08-01 12:00:00", "YYYY-MM-DD HH:mm:ss");
+    const inOut = [
+      [ "Early Q1 2017", "7 months ago" ],
+      [ "Mid Q1 2017", "6 months ago" ],
+      [ "Late Q1 2017", "5 months ago" ],
+      [ "Early 2017", "3-6 months ago" ],
+      [ "Mid 2017", "this quarter" ],
+      [ "Late 2017", "in 3-6 months" ]
+    ];
+
+    describe(`should return correctly relative to ${relativeTo.format("YYYY-MM-DD HH:mm:ss")}`, function() {
+      for(let [ inStr, outStr ] of inOut) {
+        it(`'${inStr}' = '${outStr}'`, function() {
+          assert.equal(parse(inStr).differenceTo(relativeTo), outStr, "strings should match: " + parse(inStr).countdownPrecisionType);
+        });
+      }
+    });
+  });
 });
