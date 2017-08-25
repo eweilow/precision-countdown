@@ -16,16 +16,18 @@ export function moreThan1YearsAgo(inThePast: boolean, absoluteDifference: number
     if(years === 1) {
       if(months <= 6) return "about a year and a half ago";
       else return "about a year ago";
-    } 
-    if(months <= 6) return `${years} years ago`;
-    else return `${years} years and a half ago`;
+    } else {
+      if(months <= 6) return `about ${years} years ago`;
+      else return `about ${years + 1} years ago`;
+    }
   } else {
     if(years === 1) {
       if(months <= 6) return `${defaultPrefix}about a year and a half`;
       else return `${defaultPrefix}about a year`;
-    } 
-    if(months <= 6) return `${defaultPrefix}${years} years`;
-    else return `${defaultPrefix}${years} years and a half`;
+    } else {
+      if(months <= 6) return `${defaultPrefix}${years} years`;
+      else return `${defaultPrefix}about ${years} years and a half`;
+    }
   }
 }
 export function asMonths(inThePast, absoluteDifference: number, defaultPrefix: string, prefixForPast: string, prefixForFuture: string): string {
@@ -38,12 +40,12 @@ export function asMonths(inThePast, absoluteDifference: number, defaultPrefix: s
     if(months > 9) return "about a year ago";
     if(months > 6) return "about half a year ago";
     if(months > 3) return "3-6 months ago";
-    return defaultPrefix + "last quarter";
+    return defaultPrefix + "the last 3 months";
   } else {
-    if(months > 9) return defaultPrefix + "about a year";
-    if(months > 6) return defaultPrefix + "6-9 months";
-    if(months > 3) return defaultPrefix + "about half a year";
-    return defaultPrefix + "next quarter";
+    if(months >= 9) return defaultPrefix + "about a year";
+    if(months >= 6) return defaultPrefix + "6-9 months";
+    if(months >= 3) return defaultPrefix + "3-6 months";
+    return defaultPrefix + "next 3 months";
   }
 }
 
@@ -53,10 +55,10 @@ export function formatQuarterPrecision(quarterDifference: number, prefixForPast:
   const inThePast = sign < 0;
 
   const defaultPrefix = getDefaultPrefix(prefixForFuture);
-  if(absoluteDifference >= 12) {
+  if(absoluteDifference >= 16) {
     return moreThan3YearsAgo(inThePast, absoluteDifference, defaultPrefix, prefixForPast, prefixForFuture);
   }
-  if(absoluteDifference >= 4) {
+  if(absoluteDifference > 5) {
     return moreThan1YearsAgo(inThePast, absoluteDifference, defaultPrefix, prefixForPast, prefixForFuture);
   }
   return asMonths(inThePast, absoluteDifference, defaultPrefix, prefixForPast, prefixForFuture);

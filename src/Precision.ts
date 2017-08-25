@@ -11,18 +11,18 @@ export enum PrecisionType {
 
 export class Precision {
   static parse(dateMode: DateMode, alignment: Alignment, date: boolean, month: Month, quarter: number, year: number, decade: number) {
-    if(date) {
+    if(date != null) {
       return new Precision(PrecisionType.Day, 1);
-    } else if(month) {
+    } else if(month != null) {
       //if(alignment) return new Precision(PrecisionType.Week, 2);
       return new Precision(PrecisionType.Month, 1);
-    } else if(quarter) {
+    } else if(quarter != null) {
       //if(alignment) return new Precision(PrecisionType.Month, 1);
       return new Precision(PrecisionType.Quarter, 1);
-    } else if(year) {
+    } else if(year != null) {
       //if(alignment) return new Precision(PrecisionType.Quarter, 2);
       return new Precision(PrecisionType.Year, 1);
-    } else if(decade) {
+    } else if(decade != null) {
       //if(alignment) return new Precision(PrecisionType.Year, 4);
       return new Precision(PrecisionType.Decade, 1);
     }

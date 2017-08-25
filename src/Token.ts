@@ -94,6 +94,8 @@ export class Token {
       this._data.decade = parsedDecade;
       return TokenType.Decade;
     }
+
+    return null;
   }
 
   public toString(): string {

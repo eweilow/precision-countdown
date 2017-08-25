@@ -39,21 +39,22 @@ function parse(input: string, createdAtString: string = null): RangedMoment {
 
 function parseTokens(input: string, createdAt: moment.Moment, precision: Precision, dateMode: DateMode, alignment: Alignment, date: number, month: Month, quarter: number, year: number, decade: number): RangedMoment {
   let moment: RangedMoment = new RangedMoment(input, precision, dateMode, createdAt);
-  if(date) {
-    moment.date = date;
-  }
-  if(month) {
-    moment.month = month;
-  }
-  if(quarter) {
-    moment.quarter = quarter;
+  
+  if(decade) {
+    moment.decade = decade;
   }
   if(year) {
     moment.year = year;
     if(decade) throw new Error("Both year and decade cannot be set at the same time.");
   }
-  if(decade) {
-    moment.decade = decade;
+  if(quarter) {
+    moment.quarter = quarter;
+  }
+  if(month) {
+    moment.month = month;
+  }
+  if(date) {
+    moment.date = date;
   }
   return moment;
 }

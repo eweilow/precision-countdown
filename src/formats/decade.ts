@@ -2,7 +2,7 @@ import { getDefaultPrefix } from "./prefix";
 
 export function formatDecadePrecision(decadeDifference: number, prefixForPast: string, prefixForFuture: string): string {
   const sign = Math.sign(decadeDifference);
-  const absoluteDifference = Math.abs(decadeDifference);
+  const absoluteDifference = Math.abs(Math.floor(decadeDifference / 10));
   const inThePast = sign < 0;
 
   if(inThePast) {

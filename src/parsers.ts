@@ -48,6 +48,6 @@ export function parseYear(token: string): number {
 
 export function parseDecade(token: string): number {
   const year = parseYear(token.slice(0, 4));
-  if(year !== null && token.charAt(4) === "S") return year / 10;
+  if(year !== null && token.charAt(4) === "S") return year;
   return null;
 }

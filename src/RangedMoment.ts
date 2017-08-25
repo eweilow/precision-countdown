@@ -16,6 +16,10 @@ export class RangedMoment {
   private _dateMode: DateMode;
   private _backingMoment: moment.Moment;
 
+  public get invalid(): boolean {
+    return this.precision == null || !this._backingMoment.isValid();
+  }
+
   public get input(): string {
     return this._input;
   }
@@ -41,7 +45,7 @@ export class RangedMoment {
   }
 
   public set date(date: number) {
-    this._backingMoment.date(date % this._backingMoment.daysInMonth());
+    this._backingMoment.date(Math.max(1, Math.min(date, this._backingMoment.daysInMonth())));
   }
 
   public get month(): Month { 
@@ -77,11 +81,11 @@ export class RangedMoment {
   }
 
   public get decade(): number {
-    return Math.floor(this._backingMoment.year() / 10);
+    return Math.floor(this._backingMoment.year() / 10) * 10;
   }
 
   public set decade(decade: number) {
-    this._backingMoment.year(Math.floor(decade) * 10);
+    this._backingMoment.year(Math.floor(decade / 10) * 10);
   }
 
   constructor(input: string, precision: Precision, dateMode: DateMode, backingMoment: moment.Moment = null) {
@@ -92,6 +96,8 @@ export class RangedMoment {
   }
 
   differenceTo(otherMoment: moment.Moment): string {
+    if(this.invalid) return "Invalid";
+
     const otherRangedMoment = new RangedMoment(null, this._precision, null, otherMoment);
 
     const prefix = null;
@@ -127,6 +133,8 @@ export class RangedMoment {
 
       return formatDayPrecision(Math.floor(difference), prefix, postfix);
     }
+
+    return null;
   }
 
   private prefix(): string {
@@ -151,11 +159,14 @@ export class RangedMoment {
       return this._backingMoment.format("YYYY");
     }
     if(this.precisionType === PrecisionType.Decade) {
-      return String(this.decade * 10) + "-" + String(10 + this.decade * 10);
+      return String(this.decade) + "-" + String(10 + this.decade);
     }
+    return null;
   }
 
   format(): string {
+    if(this.invalid) return "Invalid";
+
     return `${this.prefix()} ${this._format()}`.trim();
   }
 
@@ -173,11 +184,14 @@ export class RangedMoment {
       return this._backingMoment.format("YYYY");
     }
     if(this.precisionType === PrecisionType.Decade) {
-      return String(this.decade * 10) + "s";
+      return String(this.decade) + "s";
     }
+    return null;
   }
 
   humanized(): string {
+    if(this.invalid) return "Invalid";
+
     return `${this.prefix()} ${this._humanized()}`.trim();
   }
 
