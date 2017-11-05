@@ -105,10 +105,10 @@ describe("index.ts", function() {
       [ "NLT January 3 2017", "NLT 2017-01-03" ],
       [ "January 7 2017", "2017-01-07" ],
 
-      [ "Early January 2018", "Early 2018-01" ],
-      [ "NET Mid January 2018", "NET Mid 2018-01" ],
-      [ "NET January 2018", "NET 2018-01" ],
-      [ "Apr 2019", "2019-04" ],
+      [ "Early January 2018", "Early Jan 2018" ],
+      [ "NET Mid February 2018", "NET Mid Feb 2018" ],
+      [ "NET January 2018", "NET Jan 2018" ],
+      [ "Apr 2019", "Apr 2019" ],
 
       [ "NET Q1", "NET Q1 " + new Date().getUTCFullYear()],
       [ "NLT Q4 2019", "NLT Q4 2019"],
@@ -199,6 +199,9 @@ describe("index.ts", function() {
       [ "Q3 2021", "in 4 years" ],
       [ "Q4 2021", "in 4 years" ],
 
+      [ "January 2017", "7 months ago" ],
+      [ "December 2016", "8 months ago" ],
+
       [ relativeTo.clone().subtract(1, "month").format("YYYY MMM"), "last month" ],
       [ relativeTo.clone().subtract(2, "month").format("YYYY MMM"), "2 months ago" ],
       [ relativeTo.clone().subtract(12, "month").format("YYYY MMM"), "12 months ago" ],
@@ -267,20 +270,21 @@ describe("index.ts", function() {
   });
 
   describe("countdown with alignment", function() {
-    const relativeTo = moment("2017-08-01 12:00:00", "YYYY-MM-DD HH:mm:ss");
+    const relativeTo = moment("2017-08-01 00:00:00", "YYYY-MM-DD HH:mm:ss");
     const inOut = [
       [ "Early Q1 2017", "7 months ago" ],
       [ "Mid Q1 2017", "6 months ago" ],
       [ "Late Q1 2017", "5 months ago" ],
-      [ "Early 2017", "3-6 months ago" ],
-      [ "Mid 2017", "this quarter" ],
+      [ "Early 2017", "6-9 months ago" ],
+      [ "Mid 2017", "in the last 3 months" ],
       [ "Late 2017", "in 3-6 months" ]
     ];
 
     describe(`should return correctly relative to ${relativeTo.format("YYYY-MM-DD HH:mm:ss")}`, function() {
       for(let [ inStr, outStr ] of inOut) {
         it(`'${inStr}' = '${outStr}'`, function() {
-          assert.equal(parse(inStr).differenceTo(relativeTo), outStr, "strings should match: " + parse(inStr).countdownPrecisionType);
+          const parsed = parse(inStr);
+          assert.equal(parsed.differenceTo(relativeTo), outStr, "strings should match. Precision: " + parsed.countdownPrecisionType + ".\n\t  (Backing date: " + parsed.backingMoment.toString() + ").\n\t  (Relative to: " + relativeTo.toString() + ")\n\t");
         });
       }
     });

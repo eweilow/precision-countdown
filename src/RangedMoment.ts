@@ -17,6 +17,10 @@ export class RangedMoment {
   private _alignment: Alignment;
   private _backingMoment: moment.Moment;
 
+  public get backingMoment(): moment.Moment {
+    return this._backingMoment;
+  }
+
   public get utcSeconds(): number {
     return Math.floor(this._backingMoment.toDate().getTime() / 1000);
   }
@@ -71,6 +75,12 @@ export class RangedMoment {
 
   public set month(month: Month) {
     this._backingMoment.month(month);
+
+    if(this._alignedMode) {
+      if(this.alignment === Alignment.Early) this.date = 1;
+      if(this.alignment === Alignment.Mid) this.date = 30;
+      if(this.alignment === Alignment.Late) this.date = 31;
+    }
   }
 
   public get quarterAndYear(): number {
@@ -82,6 +92,26 @@ export class RangedMoment {
   }
 
   public set quarter(quarter: number) {
+    if(this._alignedMode) {
+      if(quarter === 1) {
+        if(this.alignment === Alignment.Early) this.month = Month.January;
+        if(this.alignment === Alignment.Mid) this.month = Month.February;
+        if(this.alignment === Alignment.Late) this.month = Month.March;
+      } else if(quarter === 2) {
+        if(this.alignment === Alignment.Early) this.month = Month.April;
+        if(this.alignment === Alignment.Mid) this.month = Month.May;
+        if(this.alignment === Alignment.Late) this.month = Month.June;
+      } else if(quarter === 3) {
+        if(this.alignment === Alignment.Early) this.month = Month.July;
+        if(this.alignment === Alignment.Mid) this.month = Month.August;
+        if(this.alignment === Alignment.Late) this.month = Month.September;
+      } else if(quarter === 4) {
+        if(this.alignment === Alignment.Early) this.month = Month.October;
+        if(this.alignment === Alignment.Mid) this.month = Month.November;
+        if(this.alignment === Alignment.Late) this.month = Month.December;
+      }
+    }
+
     this._backingMoment.quarter(quarter);
   }
 
@@ -90,6 +120,16 @@ export class RangedMoment {
   }
 
   public set year(year: number) {
+    if(this._alignedMode) {
+      if(this.alignment === Alignment.Early) {
+        this.month = Month.January;
+      } else if (this.alignment === Alignment.Mid) {
+        this.month = Month.July;
+      } else if (this.alignment === Alignment.Late) {
+        this.month = Month.December;
+      }
+    }
+
     this._backingMoment.year(year);
   }
 
@@ -98,7 +138,25 @@ export class RangedMoment {
   }
 
   public set decade(decade: number) {
-    this._backingMoment.year(Math.floor(decade / 10) * 10);
+    let year = Math.floor(decade / 10) * 10
+    if(this._alignedMode) {
+      if(this.alignment === Alignment.Early) {
+        year += 0;
+      } else if (this.alignment === Alignment.Mid) {
+        year += 4;
+      } else if (this.alignment === Alignment.Late) {
+        year += 9;
+      }
+    }
+    this._backingMoment.year(year);
+  }
+
+  private _alignedMode: boolean = false;
+  public enterAlignedMode() {
+    this._alignedMode = true;
+  }
+  public exitAlignedMode() {
+    this._alignedMode = false;
   }
 
   constructor(input: string, precision: Precision, dateMode: DateMode, alignment: Alignment, backingMoment: moment.Moment = null) {
@@ -107,6 +165,10 @@ export class RangedMoment {
     this._dateMode = dateMode;
     this._alignment = alignment;
     this._backingMoment = backingMoment !== null ? backingMoment.clone() : moment();
+    this._backingMoment.hour(0);
+    this._backingMoment.minute(0);
+    this._backingMoment.second(0);
+    this._backingMoment.millisecond(0);
   }
 
   static floorToZero(val) {
@@ -125,32 +187,32 @@ export class RangedMoment {
       const otherRangedMoment = new RangedMoment(null, this._precision, null, null, otherMoment);
       const difference = this.decade - otherRangedMoment.decade;
 
-      return formatDecadePrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
+      return formatDecadePrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.countdownPrecisionType === PrecisionType.Year) {
       const difference = this._backingMoment.diff(otherMoment, "year", true);
 
-      return formatYearPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
+      return formatYearPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.countdownPrecisionType === PrecisionType.Quarter) {
-      const difference = this._backingMoment.diff(otherMoment, "quarter", true);
+      const difference = this._backingMoment.diff(otherMoment, "months", true) / 3;
 
-      return formatQuarterPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
+      return formatQuarterPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.countdownPrecisionType === PrecisionType.Month) {
       const difference = this._backingMoment.diff(otherMoment, "month", true);
 
-      return formatMonthPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
+      return formatMonthPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.countdownPrecisionType === PrecisionType.Week) {
       const difference = this._backingMoment.diff(otherMoment, "week", true);
 
-      return formatWeekPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
+      return formatWeekPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
     if(this.countdownPrecisionType === PrecisionType.Day) {
       const difference = this._backingMoment.diff(otherMoment, "hours", true) / 24 + 0.5;
 
-      return formatDayPrecision(RangedMoment.floorToZero(difference) + this.precisionSpan, prefix, postfix);
+      return formatDayPrecision(RangedMoment.floorToZero(difference), prefix, postfix);
     }
 
     return null;
@@ -178,7 +240,7 @@ export class RangedMoment {
       return this._backingMoment.format("YYYY-MM-DD");
     }
     if(this.precisionType === PrecisionType.Week || this.precisionType === PrecisionType.Month) {
-      return this._backingMoment.format("YYYY-MM");
+      return this._backingMoment.format("MMM YYYY");
     }
     if(this.precisionType === PrecisionType.Quarter) {
       return this._backingMoment.format("[Q]Q YYYY");

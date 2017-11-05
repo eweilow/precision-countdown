@@ -31,7 +31,7 @@ export function moreThan1YearsAgo(inThePast: boolean, absoluteDifference: number
   }
 }
 export function asMonths(inThePast, absoluteDifference: number, defaultPrefix: string, prefixForPast: string, prefixForFuture: string): string {
-  const months = absoluteDifference * 3;
+  const months = Math.max(0, absoluteDifference * 3);
 
   if(months === 0) {
     return `${prefixForFuture||""} this quarter`.trim();

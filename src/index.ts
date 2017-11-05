@@ -50,7 +50,8 @@ function parse(input: string, createdAtString: string = null): RangedMoment {
 
 function parseTokens(input: string, createdAt: moment.Moment, precision: Precision, dateMode: DateMode, alignment: Alignment, date: number, month: Month, quarter: number, year: number, decade: number): RangedMoment {
   let moment: RangedMoment = new RangedMoment(input, precision, dateMode, alignment, createdAt);
-  
+
+  moment.enterAlignedMode();
   if(decade) {
     moment.decade = decade;
   }
@@ -67,6 +68,7 @@ function parseTokens(input: string, createdAt: moment.Moment, precision: Precisi
   if(date) {
     moment.date = date;
   }
+  moment.exitAlignedMode();
   return moment;
 }
 
@@ -78,26 +80,3 @@ import { formatYearPrecision } from "./formats/year";
 import { formatDecadePrecision } from "./formats/decade";
 
 export default parse;
-
-/*
-parseAndPrint("NET Q4 2017");
-parseAndPrint("NET Q3 2017");
-parseAndPrint("NET Q1 2018");
-parseAndPrint("NET Q2 2018");
-parseAndPrint("NLT Q4 2017");
-parseAndPrint("NLT Q3 2017");
-parseAndPrint("NLT Q1 2018");
-parseAndPrint("NLT Q2 2018");
-
-
-parseAndPrint("NET Early Jan 2017");
-parseAndPrint("NET Late Jan 2017");
-parseAndPrint("NET Mid Jan 2017");
-parseAndPrint("NET Feb 17 2017");
-parseAndPrint("NET Feb 17 2017");
-parseAndPrint("NET Feb 17 2017");
-parseAndPrint("NET January 2017");
-parseAndPrint("NLT January 2017");
-parseAndPrint("NLT January 17");
-parseAndPrint("Late 2020s");
-*/
