@@ -13,7 +13,6 @@ deploy:
     - "dist/bundle.js"
     - "dist/bundle.js.map"
     - "dist/bundle.js.gz"
-    - "dist/bundle.js.map.gz"
   skip_cleanup: true
   on:
     repo: eweilow/precision-countdown
