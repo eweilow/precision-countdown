@@ -7,7 +7,6 @@
     "test": "test"
   },
   "scripts": {
-    "install": "node_modules/.bin/tsc",
     "build": "npm run clean && npm run _build",
     "_build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
     "clean": "node_modules/.bin/del-cli dist/*",
