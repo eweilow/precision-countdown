@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+- '8'
+install:
+- npm install --no-save
+script:
+- npm run build
+deploy:
+  provider: releases
+  api_key:
+    secure: m08cfW/q9K/d7ZxWUjyjfXsPyoffW9R5fcruUrM4jY6Z/7mAMJ2fdB8GibDyPd3FW93Ri8x6OlA66WTwlttMdHIkhF30W+Cyb7tn986g6iszyvGGGx2hxyjyK0iVoA8zSv7bosXcmsH/6yGwwqfx2YafhnGH48bRfubWaGHXjBdIl6qhAq2il5yAXXdAOxzHrOswhHErFde/Aaj0HN6Lc2dIHiBiH2HH83lmO8LmS78er4nLJHECbIvj/L0KRRPnZ7YtatxdJqTdZTioON1jNGgrCZa9O/qqM4fwrHKYhPAkzzho0S2VzGL8aooALUkLWb9RAvc3ODV4LeTNHb5mnogXqcGrvJu8iND6JBf6SSFZH0HV2jrIVzfN10uvmnJEsBT6dF8GuRwGFNe4fJcGLYk5u9zP3VQvNN7glKyFqHYn8n3CmGBQTUBoTJh4SKDuc5jKCeFP3GLTzOPBUErSbIQd43/o69CmqzFWWlJqyhbxwnjkQyDpZyOAv9gs4mpnmbJVf2CEYpmfw6DrBDa3BbB+Spg50DUq/drqL2TdmeKK2ye0gPNQvHZmHon1eIEi6MTLR0iHf3bMJDgcp1cYOkNUw4dki9nDTXVQ4YxMN3eWSsM/CCZELFtCkzSNMqPwmTzzgUny6IX8dOUprg2cXjIs3QbjMAp49APcuoE6E+I=
+  file:
+    - "dist/bundle.js"
+    - "dist/bundle.js.map"
+    - "dist/bundle.js.gz"
+    - "dist/bundle.js.map.gz"
+  skip_cleanup: true
+  on:
+    repo: eweilow/seat-booking
+    tags: true

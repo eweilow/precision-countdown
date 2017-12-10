@@ -9,9 +9,9 @@
   "scripts": {
     "install": "node_modules/.bin/tsc",
     "build": "npm run clean && npm run _build",
-    "_build": "node_modules/.bin/tsc",
+    "_build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
     "clean": "node_modules/.bin/del-cli dist/*",
-    "watch": "npm run _build -- --watch",
+    "watch": "cross-env NODE_ENV=development webpack --config webpack.config.js --watc",
     "start": "npm run build && node ./dist/index.js",
     "dev": "nodemon -w ./dist ./dist/index.js",
     "test": "npm run build && npm run test-run",
@@ -23,11 +23,17 @@
   "dependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.42",
+    "babel-minify-webpack-plugin": "^0.2.0",
     "chai": "^4.1.1",
+    "compression-webpack-plugin": "^1.0.1",
+    "cross-env": "^5.1.1",
     "del-cli": "^1.1.0",
     "mocha": "^3.5.0",
     "moment": "^2.18.1",
     "source-map-support": "^0.4.16",
-    "typescript": "^2.6.1"
+    "ts-loader": "^3.2.0",
+    "typescript": "^2.6.1",
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
   }
 }
