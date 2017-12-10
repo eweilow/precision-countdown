@@ -16,5 +16,5 @@ deploy:
     - "dist/bundle.js.map.gz"
   skip_cleanup: true
   on:
-    repo: eweilow/seat-booking
+    repo: eweilow/precision-countdown
     tags: true
