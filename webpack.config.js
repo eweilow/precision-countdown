@@ -5,7 +5,8 @@ const NodeExternals = require("webpack-node-externals");
 module.exports = {
   entry: "./src/index.ts",
   output: {
-    filename: "./dist/bundle.js"
+    filename: "./dist/bundle.js",
+    libraryTarget: "commonjs2"
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
